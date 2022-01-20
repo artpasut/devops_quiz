@@ -15,16 +15,16 @@ spec:
         environment: production
     spec:
       containers:
-      - name: sample-app
-        image: artpasut/sample-app:1.0.0 # {"$imagepolicy": "flux-system:sample-app-image-policy"}
-        restartPolicy: Always
-        imagePullPolicy: Always
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "250m"
-          limits:
-            memory: "64Mi"
-            cpu: "250m"
+        - name: sample-app
+          image: artpasut/sample-app:1.0.2 # {"$imagepolicy": "flux-system:sample-app-image-policy"}
+          restartPolicy: Always
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "64Mi"
+              cpu: "250m"
       imagePullSecrets:
-      - name: dockercred
+        - name: dockercred
