@@ -1,0 +1,38 @@
+on:
+  push:
+    branches:
+      - master
+
+name: Build & Push to Dockerhub
+
+env:
+  DOCKERHUB_REPOSITORY: artpasut/sample-app
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Get Image Tag
+        id: get-tag
+        shell: bash
+        run: |
+          # get image tag from package.json
+          VERSION="$(jq -r '.version' < ./package.json)"
+          echo "::set-output name=version::$VERSION"
+
+      - name: Build & Tag & Push to Dockerhub
+        id: build-image
+        env:
+          IMAGE_TAG: ${{ steps.get-tag.outputs.version }}
+        run: |
+          docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t $DOCKERHUB_REPOSITORY:$IMAGE_TAG -f Dockerfile .
+          docker tag $DOCKERHUB_REPOSITORY:$IMAGE_TAG $DOCKERHUB_REPOSITORY:latest
+          docker push $DOCKERHUB_REPOSITORY:$IMAGE_TAG
+          docker push $DOCKERHUB_REPOSITORY:latest
