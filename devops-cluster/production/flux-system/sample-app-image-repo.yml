@@ -1,0 +1,11 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1alpha1
+kind: ImageRepository
+metadata:
+  name: sample-app-image-repo
+  namespace: flux-system
+spec:
+  secretRef:
+    name: dockercred
+  image: artpasut/sample-app
+  interval: 30s
